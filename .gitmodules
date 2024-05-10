@@ -1,3 +1,4 @@
 [submodule "psi4"]
 	path = psi4
 	url = https://github.com/psi4/psi4.git
+	branch = 1.9.x
