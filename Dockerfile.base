@@ -74,6 +74,7 @@ RUN conda/psi4-path-advisor.py cmake --objdir ../build --insist && cat cache_p4e
 WORKDIR /home/ubuntu/build/
 RUN cmake --build . -j2 # -j2 because I only have 16GB of RAM, and I want to do other stuff while the build is running
 RUN bash -O extglob -c 'rm -rf !(stage)' # Remove everything BUT the stage directory
+RUN rm -rf /home/ubuntu/psi4/ # We don't need the source code anymore
 
 # ----------   END BUILD STUFF   ---------- #
 
