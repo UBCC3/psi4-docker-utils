@@ -16,6 +16,8 @@
 # There's also a useful build script called build.sh that builds and configures from scratch called
 # complete-configure-and-build.sh
 
+ARG VER=latest
+
 FROM amd64/ubuntu:20.04
 
 # Add a user with a user group and home dir and bash prompt with ID 1000 and name ubuntu
@@ -58,7 +60,7 @@ RUN psi4/conda/psi4-path-advisor.py env --name p4env --python 3.8 --disable comp
 RUN conda env create -n p4env -f env_p4env.yaml
 
 # https://pythonspeed.com/articles/activate-conda-dockerfile/
-SHELL ["conda", "run", "-n", "p4env", "/bin/bash", "-c"]
+SHELL ["conda", "run", "--live-stream", "-n", "p4env", "/bin/bash", "-c"]
 # Doesn't do anything (except print for debug), but useful to compare to the Azure build
 RUN conda info && conda list && echo && python -V && python -c 'import numpy; print("Numpy:", numpy.version.version)'
 
@@ -79,9 +81,9 @@ RUN bash -O extglob -c 'rm -rf !(stage)' # Remove everything BUT the stage direc
 # TBH I haven't really figured out how the Psi4 install works, and this works with no known caveats
 # As an added bonus, user-modified builds automatically update so long as they use the build process above.
 RUN conda init bash
-RUN echo 'export PATH=$PATH:/home/ubuntu/build/stage/bin/' >> ~/.bashrc
-RUN echo 'export PYTHONPATH=/home/ubuntu/build/stage/lib/' >> ~/.bashrc
 RUN echo conda activate p4env >> ~/.bashrc
+ENV PATH="$PATH:/home/ubuntu/build/stage/bin/"
+ENV PYTHONPATH=/home/ubuntu/build/stage/lib/
 RUN mkdir /home/ubuntu/work
 WORKDIR /home/ubuntu/work
 CMD /bin/bash

@@ -1,0 +1,10 @@
+ARG VER=latest
+
+FROM nathanpennie/psi4-docker-utils:base-$VER
+
+SHELL ["conda", "run", "--live-stream", "-n", "p4env", "/bin/bash", "-c"]
+
+RUN conda install jupyter scipy numpy matplotlib pandas
+
+WORKDIR /home/ubuntu/work
+CMD jupyter-notebook --ip 0.0.0.0 --no-browser

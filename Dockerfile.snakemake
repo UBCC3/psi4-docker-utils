@@ -1,0 +1,11 @@
+ARG VER=latest
+
+FROM nathanpennie/psi4-docker-utils:base-$VER
+
+SHELL ["conda", "run", "--live-stream", "-n", "p4env", "/bin/bash", "-c"]
+
+# Also install a few utility libraries if they're not already installed (at least numpy SHOULD be)
+RUN conda install -c conda-forge -c bioconda snakemake scipy numpy matplotlib pandas
+
+WORKDIR /home/ubuntu/work
+CMD snakemake -c1
