@@ -110,3 +110,23 @@ The build script works by finding the branch version from the `.gitmodules` file
 **This way, updating the submodule branch is all you need to do to support a new Psi4 version** assuming the build
 doesn't end up breaking between versions (still quite possible).
 
+### Modifying Psi4
+If you want to introduce local changes to Psi4, you *don't* have to rebuild the Docker images. This way, you can develop
+Psi4 locally and test in the Docker image. If you'd like to do this, run the container like so:
+```
+docker run -it -v psi4/git/repo:/home/ubuntu/psi4/ -v psi4/git/repo/build/:/home/ubuntu/build/ nathanpennie/psi4-docker-utils:base-latest bash
+```
+Then, you can build Psi4 using the bash prompt in the container. For build commands, see `Dockerfile.base`. You'll
+notice that I added labels called `BEGIN BUILD STUFF` and `END BUILD STUFF`, so you can easily see what actually runs
+the Psi4 build. The summary is:
+1. In `/home/ubuntu/psi4`, configure the build to take place in `/home/ubuntu/build`. All output files will be put here
+2. Now, in `/home/ubuntu/build`, run `cmake`. That's all. Don't run the `rm` commands or you'll remove your intermediate
+build files; Those are just for production builds.
+
+You can then override the `build` directory for any of the pre-built containers using
+`-v psi4/git/repo/build/:/home/ubuntu/build/`. This will override the Psi4 executables being used in the container's
+`$PATH`, so Psi4 will be updated.
+
+All containers keep the build utils installed, so can also just use `docker exec` to launch a bash prompt on a running
+container and rebuild that way instead of using `docker run` each time.
+
