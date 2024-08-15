@@ -1,6 +1,6 @@
 ARG VER=latest
 
-FROM nathanpennie/psi4-docker-utils:jupyter-$VER
+FROM ubchemica/psi4-docker-utils:jupyter-$VER
 
 RUN conda install <your packages here>
 

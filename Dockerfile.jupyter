@@ -1,6 +1,6 @@
 ARG VER=latest
 
-FROM nathanpennie/psi4-docker-utils:base-$VER
+FROM ubchemica/psi4-docker-utils:base-$VER
 
 SHELL ["conda", "run", "--live-stream", "-n", "p4env", "/bin/bash", "-c"]
 

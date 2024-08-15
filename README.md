@@ -1,5 +1,5 @@
 # psi4-docker-utils
-> Utilities to help build replicatable Psi4 docker images with various utilities for reproducible quantum chemistry calculations.
+> "Frozen" Ubuntu + Conda environments in Docker to build and run Psi4 alongside various utility packages.
 
 **Why?** -- So far, our research group has been having a very difficult time building Psi4. Each person's computer
 has a different issue, and its difficult to reproduce things. So, this Docker container was written to provide a
@@ -24,11 +24,11 @@ reproducible results!
 This image can be used to run Psi4 directly, like so:
 
 ```
-docker run -v .:/home/ubuntu/work/ nathanpennie/psi4-docker-utils:base-latest psi4 h2o.dat output.dat
+docker run -v .:/home/ubuntu/work/ ubchemica/psi4-docker-utils:base-latest psi4 h2o.dat output.dat
 ```
 * `-v .:/home/ubuntu/work/` - Any command runs in `/home/ubuntu/work/` *inside* the container. So, this gives Psi4
 access to your local directory (`.`)
-* `nathanpennie/psi4-docker-utils:jupyter-latest` - The docker image tag. Switch `latest` to your desired Psi4 version
+* `ubchemica/psi4-docker-utils:jupyter-latest` - The docker image tag. Switch `latest` to your desired Psi4 version
 branch tag. Make sure you have actually built this image first, or I have posted it to Docker Hub.
 * Next follows the [Psi4 command itself](https://psicode.org/psi4manual/master/tutorial.html)
 
@@ -40,7 +40,7 @@ You should find an `output.dat`, among other things, in your current directory, 
 Or, you can launch an interactive bash shell:
 
 ```
-docker run -it -v .:/home/ubuntu/work/ nathanpennie/psi4-docker-utils:base-latest bash
+docker run -it -v .:/home/ubuntu/work/ ubchemica/psi4-docker-utils:base-latest bash
 ```
 
 * Adds `-it` for an interactive shell
@@ -60,12 +60,12 @@ is actually saving correctly on your local filesystem where you expect it to.
 
 I'd recommend running it with:
 ```
-docker run -it -v .:/home/ubuntu/work nathanpennie/psi4-docker-utils:jupyter-latest
+docker run -it -v .:/home/ubuntu/work ubchemica/psi4-docker-utils:jupyter-latest
 ```
 * `-it` - Makes the terminal interactive, and allows you to see the `token` URL
 * `-v .:/home/ubuntu/work/` - This gives Jupyter access to your local directory (`.`). The local directory contents
 should automatically appear in Jupyter.
-* `nathanpennie/psi4-docker-utils:jupyter-latest` - The docker image tag. Switch `latest` to your desired Psi4 version
+* `ubchemica/psi4-docker-utils:jupyter-latest` - The docker image tag. Switch `latest` to your desired Psi4 version
 branch tag. Make sure you have actually built this image first, or I have posted it to Docker Hub.
 * No additional command is necessary
 
@@ -86,7 +86,7 @@ There is an example notebook in the `example` directory. Try running it to get t
 This image comes with `snakemake`, as well as `numpy`, `scipy`, `matplotlib`, and `pandas`. It's useful for generating
 reproducible calculations. It can be run like so:
 ```
-docker run -it -v .:/home/ubuntu/work nathanpennie/psi4-docker-utils:jupyter-latest snakemake -c1 <your args>
+docker run -it -v .:/home/ubuntu/work ubchemica/psi4-docker-utils:jupyter-latest snakemake -c1 <your args>
 ```
 The arguments for this will depend on your Snakefile. See the [Snakemake docs](https://snakemake.readthedocs.io/en/stable/).
 
@@ -114,7 +114,7 @@ doesn't end up breaking between versions (still quite possible).
 If you want to introduce local changes to Psi4, you *don't* have to rebuild the Docker images. This way, you can develop
 Psi4 locally and test in the Docker image. If you'd like to do this, run the container like so:
 ```
-docker run -it -v psi4/git/repo:/home/ubuntu/psi4/ -v psi4/git/repo/build/:/home/ubuntu/build/ nathanpennie/psi4-docker-utils:base-latest bash
+docker run -it -v psi4/git/repo:/home/ubuntu/psi4/ -v psi4/git/repo/build/:/home/ubuntu/build/ ubchemica/psi4-docker-utils:base-latest bash
 ```
 Then, you can build Psi4 using the bash prompt in the container. For build commands, see `Dockerfile.base`. You'll
 notice that I added labels called `BEGIN BUILD STUFF` and `END BUILD STUFF`, so you can easily see what actually runs

@@ -34,13 +34,12 @@ RUN chown ubuntu:ubuntu /home/ubuntu/psi4/
 # Though, I think the effect is limited since we're using an older version of Ubuntu (fewer updates)
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt upgrade -y && apt install -y build-essential cmake make gfortran gcc-10 g++-10 python3 python3-pip wget curl && rm -rf /var/lib/apt/lists/*
-RUN rm -rf /var/lib/apt/lists/*
 
 # Switch into non-root mode
 USER ubuntu
 
 # Install miniconda for Python 3.8
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py38_23.11.0-2-Linux-x86_64.sh -O miniconda.sh && chmod +x miniconda.sh && ./miniconda.sh -b
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py38_23.11.0-2-Linux-x86_64.sh -O miniconda.sh && chmod +x miniconda.sh && ./miniconda.sh -b && rm miniconda.sh
 
 # Set up the path and install conda deps
 ENV PATH=/home/ubuntu/miniconda3/bin:$PATH
@@ -62,6 +61,7 @@ RUN conda env create -n p4env -f env_p4env.yaml
 # https://pythonspeed.com/articles/activate-conda-dockerfile/
 SHELL ["conda", "run", "--live-stream", "-n", "p4env", "/bin/bash", "-c"]
 # Doesn't do anything (except print for debug), but useful to compare to the Azure build
+RUN conda install -c conda-forge dftd3-python simple-dftd3
 RUN conda info && conda list && echo && python -V && python -c 'import numpy; print("Numpy:", numpy.version.version)'
 
 # ----------  BEGIN BUILD STUFF  ---------- #
